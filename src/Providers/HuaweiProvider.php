@@ -12,6 +12,11 @@ class HuaweiProvider extends AbstractProvider implements ProviderInterface
 {
     protected $encodingType = PHP_QUERY_RFC3986;
     protected $scopeSeparator = " ";
+    protected $scopes = [
+        'openid',
+        'profile',
+        'email',
+    ];
 
     protected function getAuthUrl($state)
     {
@@ -39,7 +44,6 @@ class HuaweiProvider extends AbstractProvider implements ProviderInterface
         }
 
         $fields["grant_type"] = "authorization_code";
-        $fields["scope"] = "openid profile email";
 
         return array_merge($fields, $this->parameters);
     }
