@@ -6,6 +6,8 @@ use Illuminate\Support\Facades\Blade;
 use Laravel\Socialite\Contracts\Factory;
 use Illuminate\Support\ServiceProvider as LaravelServiceProvider;
 use ImpressoLabs\LaravelSignInWithHuawei\Providers\HuaweiProvider;
+use Laravel\Socialite\Facades\Socialite;
+use Laravel\Socialite\SocialiteManager;
 
 class ServiceProvider extends LaravelServiceProvider
 {
@@ -32,14 +34,19 @@ class ServiceProvider extends LaravelServiceProvider
 
     public function bootSocialiteDriver()
     {
+        /** @var SocialiteManager $socialite */
         $socialite = $this->app->make(Factory::class);
         $socialite->extend(
             'huawei',
             function ($app) use ($socialite) {
                 $config = $app['config']['services.huawei'];
 
-                return $socialite
+                $provider = $socialite
                     ->buildProvider(HuaweiProvider::class, $config);
+
+                $provider->setScopes($config['scopes'] ?? HuaweiProvider::DEFAULT_SCOPES);
+
+                return $provider;
             }
         );
     }
@@ -76,7 +83,7 @@ class ServiceProvider extends LaravelServiceProvider
     style="display: block; font-family='SF Pro Text'; text-align: center; height: 25%; padding: 5%; padding-top: 3%; padding-bottom: 3%; width: 100%; background-color: {$backgroundColor}; border: {$border}; border-radius: {$borderRadius}px; color: {$textColor};"
     id="huawei"
 >
-     {$text} with Huawei
+    {$text} with Huawei
 </a>
 EOF;
         });
