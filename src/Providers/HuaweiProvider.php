@@ -10,13 +10,15 @@ use Laravel\Socialite\Two\User;
 
 class HuaweiProvider extends AbstractProvider implements ProviderInterface
 {
-    protected $encodingType = PHP_QUERY_RFC3986;
-    protected $scopeSeparator = " ";
-    protected $scopes = [
+    const DEFAULT_SCOPES = [
         'openid',
         'profile',
         'email',
     ];
+
+    protected $encodingType = PHP_QUERY_RFC3986;
+    protected $scopeSeparator = " ";
+    protected $scopes = self::DEFAULT_SCOPES;
 
     protected function getAuthUrl($state)
     {
